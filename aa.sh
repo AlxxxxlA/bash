@@ -36,27 +36,12 @@ install_common_services() {
     pip3 install --upgrade pip
 }
 
-# 安装DDNS-GO
-install_ddnsgo() {
+# 安装DDNS-GO并配置服务
+setup_ddnsgo() {
     sudo mkdir -p /usr/local/bin/ddns-go
     BIN_URL="https://github.com/jeessy2/ddns-go/releases/download/v5.2.0/ddns-go_5.2.0_linux_$ARCH.tar.gz"
     sudo wget -qO- "$BIN_URL" | sudo tar zxvf - -C /usr/local/bin/ddns-go --strip-components 1
     sudo /usr/local/bin/ddns-go/ddns-go -v &> /dev/null || { echo "DDNS-GO安装失败！" >&2; exit 1; }
-    sudo systemctl start ddnsgo && echo "DDNS-GO安装成功！请在 /usr/local/bin/ddns-go 目录下配置及运行。"
-}
-
-# 卸载DDNS-GO
-uninstall_ddnsgo() {
-    sudo systemctl stop ddnsgo
-    sudo systemctl disable ddnsgo
-    sudo rm /etc/systemd/system/ddnsgo.service
-    sudo /usr/local/bin/ddns-go/ddns-go -s uninstall
-    sudo rm -rf /usr/local/bin/ddns-go
-    echo "DDNS-GO已成功卸载！"
-}
-
-# 配置DDNS-GO服务
-setup_ddnsgo_service() {
     echo "请输入监听地址（例如: :9876，注意冒号不能省略）："
     read -ei ":9876" listen_address
     echo "请输入同步间隔时间，单位为秒（例如: 200）："
@@ -66,14 +51,14 @@ setup_ddnsgo_service() {
     echo "DDNS-GO服务已成功安装并启动！"
 }
 
-# 卸载DDNS-GO服务
-uninstall_ddnsgo_service() {
+# 卸载DDNS-GO及其服务
+uninstall_ddnsgo() {
     sudo systemctl stop ddnsgo
     sudo systemctl disable ddnsgo
     sudo rm /etc/systemd/system/ddnsgo.service
     sudo /usr/local/bin/ddns-go/ddns-go -s uninstall
     sudo rm -rf /usr/local/bin/ddns-go
-    echo "DDNS-GO服务已成功卸载！"
+    echo "DDNS-GO已成功卸载！"
 }
 
 # 菜单
@@ -84,11 +69,9 @@ while true; do
     echo "3. 开通代理"
     echo "4. 安装Docker"
     echo "5. 安装常用服务"
-    echo "6. 安装DDNS-GO"
-    echo "7. 配置DDNS-GO服务"
-    echo "8. 卸载DDNS-GO"
-    echo "9. 卸载DDNS-GO服务"
-    echo "10. 退出"
+    echo "6. 安装并配置DDNS-GO服务"
+    echo "7. 卸载DDNS-GO及其服务"
+    echo "8. 退出"
     read choice
 
     case $choice in
@@ -112,18 +95,12 @@ while true; do
             echo "常用服务安装完成！"
             ;;
         6)
-            install_ddnsgo
+            setup_ddnsgo
             ;;
         7)
-            setup_ddnsgo_service
-            ;;
-        8)
             uninstall_ddnsgo
             ;;
-        9)
-            uninstall_ddnsgo_service
-            ;;
-        10)
+        8)
             echo "感谢使用，再见！"
             exit 0
             ;;
