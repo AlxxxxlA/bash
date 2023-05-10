@@ -40,8 +40,8 @@ install_common_services() {
 setup_ddnsgo() {
     sudo mkdir -p /usr/local/bin/ddns-go
     BIN_URL="https://github.com/jeessy2/ddns-go/releases/download/v5.2.0/ddns-go_5.2.0_linux_$ARCH.tar.gz"
-    sudo wget -qO- "$BIN_URL" | sudo tar zxvf - -C /usr/local/bin/ddns-go --strip-components 1
-    sudo /usr/local/bin/ddns-go/ddns-go -v &> /dev/null || { echo "DDNS-GO安装失败！" >&2; exit 1; }
+    sudo wget -qO- "$BIN_URL" | sudo tar zxvf - -C /usr/local/bin/ddns-go
+    #sudo /usr/local/bin/ddns-go/ddns-go -v &> /dev/null || { echo "DDNS-GO安装失败！" >&2; exit 1; }
     echo "请输入监听地址（例如: :9876，注意冒号不能省略）："
     read -ei ":9876" listen_address
     echo "请输入同步间隔时间，单位为秒（例如: 200）："
