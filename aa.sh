@@ -37,7 +37,7 @@ install_common_services() {
 # 安装DDNS-GO
 install_ddnsgo() {
     sudo mkdir -p /usr/local/bin/ddns-go
-    BIN_URL="https://github.com/jeessy2/ddns-go/releases/download/v5.2.0/ddns-go_5.2.0_$ARCH.tar.gz"
+    BIN_URL="https://github.com/jeessy2/ddns-go/releases/download/v5.2.0/ddns-go_5.2.0_linux_$ARCH.tar.gz"
     sudo wget -O /usr/local/bin/ddns-go/ddns-go.tar.gz "$BIN_URL"
     sudo tar zxvf /usr/local/bin/ddns-go/ddns-go.tar.gz -C /usr/local/bin/ddns-go/
     sudo /usr/local/bin/ddns-go/ddns-go -c /usr/local/bin/ddns-go/config.yaml &
