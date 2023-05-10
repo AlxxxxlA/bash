@@ -30,7 +30,7 @@ setup_docker() {
 # 安装常用服务
 install_common_services() {
     apt-get update
-    apt-get install -y python3-pip ssh screen
+    apt-get install -y python3-pip ssh screen vim
     pip3 install --upgrade pip
 }
 
@@ -40,22 +40,17 @@ install_ddnsgo() {
     BIN_URL="https://github.com/jeessy2/ddns-go/releases/download/v5.2.0/ddns-go_5.2.0_linux_$ARCH.tar.gz"
     sudo wget -O /usr/local/bin/ddns-go/ddns-go.tar.gz "$BIN_URL"
     sudo tar zxvf /usr/local/bin/ddns-go/ddns-go.tar.gz -C /usr/local/bin/ddns-go/
-    sudo /usr/local/bin/ddns-go/ddns-go -c /usr/local/bin/ddns-go/config.yaml &
+    #sudo /usr/local/bin/ddns-go/ddns-go -c /usr/local/bin/ddns-go/config.yaml &
 }
 
 # 配置DDNS-GO服务
 setup_ddnsgo_service() {
     echo "请输入监听地址（例如: :9876，注意冒号不能省略）"
     read listen_address
-    echo "请输入同步间隔时间，单位为秒（例如: 600）"
+    echo "请输入同步间隔时间，单位为秒（例如: 200）"
     read sync_interval
-    echo "请输入自定义配置文件路径（例如: /usr/local/bin/ddns-go/config.yaml）"
-    read custom_config_path
-    echo "请输入参数（例如: -skipVerify）"
-    read parameters
-
     # 安装服务
-    sudo /usr/local/bin/ddns-go/ddns-go -s install -l "$listen_address" -f "$sync_interval" -c "$custom_config_path" $parameters
+    sudo /usr/local/bin/ddns-go/ddns-go -s install -l "$listen_address" -f "$sync_interval" -c /usr/local/bin/ddns-go/config.yaml -skipVerify
     
     # 启动服务
     sudo systemctl start ddnsgo
